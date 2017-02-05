@@ -1,0 +1,21 @@
+---
+driver:
+  name: docker
+  binary: docker
+  use_sudo: false
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+    forward:
+      - 80:80
+
+suites:
+  - name: create_webapp
+    run_list:
+      - recipe[apt::default]
+      - recipe[nginx::default]
+      - recipe[buildContainerTask::default]
+    attributes:
