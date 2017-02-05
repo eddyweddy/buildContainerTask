@@ -1,0 +1,7 @@
+name 'buildContainerTask'
+maintainer 'The Authors'
+maintainer_email 'eddyweddy@gmail.com'
+license 'all_rights'
+description 'Installs/Configures task'
+long_description 'Installs/Configures task'
+version '0.1.0'
