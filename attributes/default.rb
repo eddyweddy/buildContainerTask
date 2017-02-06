@@ -5,3 +5,5 @@ default['passenger-nginx']['rvm']['rvm_shell'] = '/etc/profile.d/rvm.sh'
 default['passenger-nginx']['nginx']['user'] = 'www-data'
 
 default['nginx']['user'] = 'www-data'
+default['nginx']['passenger']['version'] = '5.0.30'
+default['nginx']['passenger']['root'] = '/var/www/simpleSinatra'

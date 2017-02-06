@@ -1,14 +1,15 @@
+rvm_file = '/usr/local/rvm/bin/rvm'
 
 execute 'Install RVM gpg key' do
   command 'curl -sSL https://rvm.io/mpapis.asc | sudo gpg --import -'
   user 'root'
-  not_if 'which rvm'
+  not_if { File.exist? rvm_file }
 end
 
 execute 'Install RVM' do
   command 'curl -sSL https://get.rvm.io | bash -s stable --ruby'
   user 'root'
-  not_if 'which rvm'
+  not_if { File.exist? rvm_file }
 end
 
 execute 'add nginx user to rvm group' do
@@ -32,4 +33,5 @@ bash 'installing passenger gem' do
   EOF
   user 'root'
 end
+
 

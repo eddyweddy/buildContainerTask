@@ -1,0 +1,17 @@
+{
+  "default_attributes": {
+    "nginx": {
+      "repo_source": "passenger",
+      "package_name": "nginx-extras",
+      "passenger": {
+        "install_method": "package",
+        "version": "5.0.30"
+      }
+    }
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[nginx::default]",
+    "recipe[nginx::passenger]"
+  ]
+}

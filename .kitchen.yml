@@ -14,8 +14,9 @@ platforms:
 
 suites:
   - name: create_webapp
+    roles_path: roles
     run_list:
-      - recipe[apt::default]
-      - recipe[nginx::default]
       - recipe[buildContainerTask::default]
+      - recipe[apt::default]
+      - role[nginx]
     attributes:
