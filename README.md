@@ -21,3 +21,8 @@ Use bundler to get dependant gems. A small change had to be done to the provided
 3) Docker container forwards port 80 to the host. You should be able to connect using any browser to view the app output
 ```
 
+## To Test
+### unit tests
+
+### Integration tests
+After a successful 'kitchen converge', integration tests can be run using 'kitchen verify'

@@ -9,6 +9,8 @@ bash 'updating nginx keys' do
   apt-get update
   EOF
   user 'root'
+  action :run
+  only_if { ::File.open('/etc/apt/sources.list.d/passenger.list').grep(%r{oss-binaries.phusionpassenger.com/apt/passenger xenial main}).empty? }
 end
 
 apt_package %w(nginx net-tools ufw) do
@@ -26,6 +28,7 @@ template 'sites default config' do
   owner 'root'
   group 'root'
   mode '0644'
+  action :create
 end
 
 ruby_block 'enable include passenger config in nginx conf file' do
@@ -77,8 +80,3 @@ execute 'restart nginx' do
   command "service nginx restart"
   user 'root'
 end
-
-# service 'nginx' do
-#   supports :restart => true
-#   action :enable
-# end
