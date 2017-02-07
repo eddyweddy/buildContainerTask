@@ -1,16 +1,12 @@
-#
-# Cookbook Name:: DockerContainer
-# Spec:: default
-#
-# Copyright (c) 2017 The Authors, All Rights Reserved.
+require_relative '../../spec_helper'
 
-require 'spec_helper'
+describe 'buildContainerTask::default' do
 
-describe 'DockerContainer::default' do
-  context 'When all attributes are default, on an unspecified platform' do
+  context 'verify converge will pass with default' do
     let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new
+      runner = ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04')
       runner.converge(described_recipe)
+
     end
 
     it 'converges successfully' do
