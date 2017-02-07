@@ -1,37 +1,79 @@
-rvm_file = '/usr/local/rvm/bin/rvm'
+app_user = 'www-data'
+app_path = '/var/www/simpleSinatra'
 
-execute 'Install RVM gpg key' do
-  command 'curl -sSL https://rvm.io/mpapis.asc | sudo gpg --import -'
-  user 'root'
-  not_if { File.exist? rvm_file }
-end
 
-execute 'Install RVM' do
-  command 'curl -sSL https://get.rvm.io | bash -s stable --ruby'
-  user 'root'
-  not_if { File.exist? rvm_file }
-end
-
-execute 'add nginx user to rvm group' do
-  command "adduser #{node['passenger-nginx']['nginx']['user']} rvm"
-  user 'root'
-end
-
-bash 'installing ruby' do
-  code "source #{node['passenger-nginx']['rvm']['rvm_shell']} && rvm install #{node['passenger-nginx']['ruby_version']}"
-  user 'root'
-end
-
-bash 'setting installed ruby to default' do
-  code "source #{node['passenger-nginx']['rvm']['rvm_shell']} && rvm --default use #{node['passenger-nginx']['ruby_version']}"
-end
-
-bash 'installing passenger gem' do
+bash 'updating nginx keys' do
   code <<-EOF
-  source #{node['passenger-nginx']['rvm']['rvm_shell']}
-  gem install passenger -v #{node['passenger-nginx']['passenger']['version']}
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+  sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger xenial main > /etc/apt/sources.list.d/passenger.list'
+  apt-get update
   EOF
   user 'root'
 end
 
+apt_package %w(nginx net-tools) do
+  action :install
+end
 
+template 'sites default config' do
+  path '/etc/nginx/sites-available/default'
+  source 'default.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
+ruby_block 'enable include passenger config in nginx conf file' do
+  block do
+    file = Chef::Util::FileEdit.new('/etc/nginx/nginx.conf')
+    file.search_file_replace_line('# include /etc/nginx/passenger.conf;', 'include /etc/nginx/passenger.conf;')
+    file.write_file
+  end
+end
+
+ruby_block 'replace ruby in passenger conf file' do
+  block do
+    file = Chef::Util::FileEdit.new('etc/nginx/passenger.conf')
+    file.search_file_replace_line('passenger_ruby /usr/bin/passenger_free_ruby;','passenger_ruby /usr/bin/ruby;')
+    file.write_file
+  end
+end
+
+%W(#{app_path} #{app_path}/public #{app_path}/tmp).each do |dir|
+  directory "#{dir}" do
+    owner app_user
+    group app_user
+    mode '0755'
+    action :create
+  end
+end
+
+cookbook_file "#{app_path}/config.ru" do
+  source 'config.ru'
+  owner app_user
+  group app_user
+  mode '0644'
+  action :create
+end
+
+cookbook_file "#{app_path}/helloworld.rb" do
+  source 'helloworld.rb'
+  owner app_user
+  group app_user
+  mode '0644'
+  action :create
+end
+
+gem_package 'sinatra' do
+  action :install
+end
+
+execute 'restart nginx' do
+  command "service nginx restart"
+  user 'root'
+end
+
+# service 'nginx' do
+#   supports :restart => true
+#   action :enable
+# end

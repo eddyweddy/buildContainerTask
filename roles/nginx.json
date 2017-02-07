@@ -11,7 +11,6 @@
   },
   "chef_type": "role",
   "run_list": [
-    "recipe[nginx::default]",
-    "recipe[nginx::passenger]"
+    "recipe[nginx::default]"
   ]
 }

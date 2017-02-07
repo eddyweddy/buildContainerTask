@@ -8,7 +8,7 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: ubuntu-12.04
+  - name: ubuntu
     forward:
       - 80:80
 
@@ -16,7 +16,6 @@ suites:
   - name: create_webapp
     roles_path: roles
     run_list:
-      - recipe[buildContainerTask::default]
       - recipe[apt::default]
-      - role[nginx]
+      - recipe[buildContainerTask::default]
     attributes:
