@@ -9,8 +9,6 @@ provisioner:
 
 platforms:
   - name: ubuntu
-    forward:
-      - 80:80
 
 suites:
   - name: create_webapp
@@ -18,4 +16,7 @@ suites:
     run_list:
       - recipe[apt::default]
       - recipe[buildContainerTask::default]
-    attributes:
+    driver_config:
+      privileged: true
+      forward:
+        - 80:80

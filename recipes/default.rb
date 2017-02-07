@@ -11,8 +11,13 @@ bash 'updating nginx keys' do
   user 'root'
 end
 
-apt_package %w(nginx net-tools) do
+apt_package %w(nginx net-tools ufw) do
   action :install
+end
+
+execute 'enable basic firewalling' do
+  command "ufw allow 'Nginx Full'"
+  user 'root'
 end
 
 template 'sites default config' do
