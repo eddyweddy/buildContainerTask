@@ -22,7 +22,6 @@ Use bundler to get dependant gems. A small change had to be done to the provided
 ```
 
 ## To Test
-### unit tests
 
 ### Integration tests
 After a successful 'kitchen converge', integration tests can be run using 'kitchen verify'
