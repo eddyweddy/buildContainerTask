@@ -10,7 +10,7 @@ bash 'updating nginx keys' do
   EOF
   user 'root'
   action :run
-  # only_if { ::File.open('/etc/apt/sources.list.d/passenger.list').grep(%r{oss-binaries.phusionpassenger.com/apt/passenger xenial main}).empty? }
+  not_if { ::File.exist?('/etc/apt/sources.list.d/passenger.list') }
 end
 
 apt_package %w(nginx net-tools ufw) do
