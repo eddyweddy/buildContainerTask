@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-app_user = 'www-data'
-
 describe 'verify Nginx service' do
   it 'is installed' do
     expect(package('nginx')).to be_installed
