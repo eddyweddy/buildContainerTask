@@ -1,6 +1,14 @@
-app_user = 'www-data'
-app_path = '/var/www/simpleSinatra'
-
+app_name = "#{node['nginx']['app']['name']}"
+app_user = "#{node['nginx']['user']}"
+app_path = "#{node['nginx']['app']['base']}/#{node['nginx']['app']['name']}"
+app_dirs = [app_path]
+node['nginx']['app']['subdirectories'].each do |subdir|
+  app_dirs << "#{app_path}/#{subdir}"
+end
+app_files = []
+node['nginx']['app']['files'].each do |file|
+  app_files << file
+end
 
 bash 'updating nginx keys' do
   code <<-EOF
@@ -22,7 +30,7 @@ execute 'enable basic firewalling' do
   user 'root'
 end
 
-template 'sites default config' do
+template 'app config' do
   path '/etc/nginx/sites-available/default'
   source 'default.erb'
   owner 'root'
@@ -47,7 +55,7 @@ ruby_block 'replace ruby in passenger conf file' do
   end
 end
 
-%W(#{app_path} #{app_path}/public #{app_path}/tmp).each do |dir|
+app_dirs.each do |dir|
   directory "#{dir}" do
     owner app_user
     group app_user
