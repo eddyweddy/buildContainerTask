@@ -64,20 +64,14 @@ app_dirs.each do |dir|
   end
 end
 
-cookbook_file "#{app_path}/config.ru" do
-  source 'config.ru'
-  owner app_user
-  group app_user
-  mode '0644'
-  action :create
-end
-
-cookbook_file "#{app_path}/helloworld.rb" do
-  source 'helloworld.rb'
-  owner app_user
-  group app_user
-  mode '0644'
-  action :create
+app_files.each do |file|
+  cookbook_file "#{app_path}/#{file}" do
+    source 'config.ru'
+    owner app_user
+    group app_user
+    mode '0644'
+    action :create
+  end
 end
 
 gem_package 'sinatra' do
