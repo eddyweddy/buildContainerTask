@@ -22,6 +22,8 @@ Use bundler to get dependant gems. A small change had to be done to the provided
 ```
 
 ## To Test
-
+### Unit tests
+From command line run :
+bundle exec rspec ./spec/unit/recipes/default_spec.rb
 ### Integration tests
 After a successful 'kitchen converge', integration tests can be run using 'kitchen verify'
