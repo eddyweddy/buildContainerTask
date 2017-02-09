@@ -66,7 +66,7 @@ end
 
 app_files.each do |file|
   cookbook_file "#{app_path}/#{file}" do
-    source 'config.ru'
+    source "#{file}"
     owner app_user
     group app_user
     mode '0644'
