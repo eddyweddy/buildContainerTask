@@ -54,23 +54,6 @@ bash 'Ensure passenger config files are linked' do
   action :run
 end
 
-# Deprecated
-# ruby_block 'enable include passenger config in nginx conf file' do
-#   block do
-#     file = Chef::Util::FileEdit.new('/etc/nginx/nginx.conf')
-#     file.search_file_replace_line('# include /etc/nginx/passenger.conf;', 'include /etc/nginx/passenger.conf;')
-#     file.write_file
-#   end
-# end
-
-# ruby_block 'replace ruby in passenger conf file' do
-#   block do
-#     file = Chef::Util::FileEdit.new('etc/nginx/passenger.conf')
-#     file.search_file_replace_line('passenger_ruby /usr/bin/passenger_free_ruby;','passenger_ruby /usr/bin/ruby;')
-#     file.write_file
-#   end
-# end
-
 app_dirs.each do |dir|
   directory "#{dir}" do
     owner app_user
