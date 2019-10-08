@@ -26,10 +26,10 @@ end
 describe file('/etc/nginx/nginx.conf') do
   it { should exist }
   it { should be_owned_by 'root' }
-  its(:content) { should match (%r{^include /etc/nginx/passenger.conf;}) }
+  its(:content) { should match (%r{^include \/etc\/nginx\/modules-enabled\/\*.conf;}) }
 end
 
-describe file('/etc/nginx/passenger.conf') do
+describe file('/etc/nginx/conf.d/mod-http-passenger.conf') do
   it { should exist }
   it { should be_owned_by 'root' }
 end

@@ -26,7 +26,7 @@ bash 'updating nginx keys' do
   not_if { ::File.exist?('/etc/apt/sources.list.d/passenger.list') }
 end
 
-apt_package %w(nginx net-tools ufw) do
+apt_package %w(nginx libnginx-mod-http-passenger net-tools ufw) do
   action :install
 end
 
@@ -44,21 +44,32 @@ template 'app config' do
   action :create
 end
 
-ruby_block 'enable include passenger config in nginx conf file' do
-  block do
-    file = Chef::Util::FileEdit.new('/etc/nginx/nginx.conf')
-    file.search_file_replace_line('# include /etc/nginx/passenger.conf;', 'include /etc/nginx/passenger.conf;')
-    file.write_file
-  end
+bash 'Ensure passenger config files are linked' do
+  code <<-EOF
+  if [ ! -f /etc/nginx/modules-enabled/50-mod-http-passenger.conf ]; then
+    sudo ln -s /usr/share/nginx/modules-available/mod-http-passenger.load /etc/nginx/modules-enabled/50-mod-http-passenger.conf ;
+  fi
+  EOF
+  user 'root'
+  action :run
 end
 
-ruby_block 'replace ruby in passenger conf file' do
-  block do
-    file = Chef::Util::FileEdit.new('etc/nginx/passenger.conf')
-    file.search_file_replace_line('passenger_ruby /usr/bin/passenger_free_ruby;','passenger_ruby /usr/bin/ruby;')
-    file.write_file
-  end
-end
+# Deprecated
+# ruby_block 'enable include passenger config in nginx conf file' do
+#   block do
+#     file = Chef::Util::FileEdit.new('/etc/nginx/nginx.conf')
+#     file.search_file_replace_line('# include /etc/nginx/passenger.conf;', 'include /etc/nginx/passenger.conf;')
+#     file.write_file
+#   end
+# end
+
+# ruby_block 'replace ruby in passenger conf file' do
+#   block do
+#     file = Chef::Util::FileEdit.new('etc/nginx/passenger.conf')
+#     file.search_file_replace_line('passenger_ruby /usr/bin/passenger_free_ruby;','passenger_ruby /usr/bin/ruby;')
+#     file.write_file
+#   end
+# end
 
 app_dirs.each do |dir|
   directory "#{dir}" do
@@ -85,5 +96,10 @@ end
 
 execute 'restart nginx' do
   command "service nginx restart"
+  user 'root'
+end
+
+execute 'Start UFW' do
+  command "service ufw start"
   user 'root'
 end

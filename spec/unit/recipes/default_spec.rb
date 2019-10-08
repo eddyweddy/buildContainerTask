@@ -13,7 +13,7 @@ describe 'buildContainerTask::default' do
     let(:subdirs) { %w(dir1 dir2 dir3) }
     let(:files) { %w(file1 file2 file3) }
     let(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04') do |node|
+      runner = ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '18.04') do |node|
         node.override['nginx']['user'] = user
         node.override['nginx']['app']['base'] = base
         node.override['nginx']['app']['name'] = app_name
@@ -29,7 +29,7 @@ describe 'buildContainerTask::default' do
     end
 
     it 'installs multiple packages' do
-      expect(chef_run).to install_apt_package(%w(nginx net-tools ufw))
+      expect(chef_run).to install_apt_package(%w(nginx libnginx-mod-http-passenger net-tools ufw))
     end
 
     it 'creates base app dir' do
