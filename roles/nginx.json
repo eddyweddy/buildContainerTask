@@ -5,7 +5,7 @@
       "package_name": "nginx-extras",
       "passenger": {
         "install_method": "package",
-        "version": "5.0.30"
+        "version": "5.0.8"
       }
     }
   },

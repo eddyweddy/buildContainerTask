@@ -8,7 +8,7 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: ubuntu
+  - name: ubuntu-18.04
 
 suites:
   - name: create_webapp

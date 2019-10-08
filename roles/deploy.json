@@ -2,6 +2,6 @@
   "chef_type": "role",
   "run_list": [
     "recipe[apt::default]",
-    "ecipe[buildContainerTask::default]"
+    "recipe[buildContainerTask::default]"
   ]
-}
+}ufw

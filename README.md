@@ -4,14 +4,15 @@ Write a cookbook to create a web app that utilizes these tools
 
 * Test kitchen -- makes it easier to test
 * Berks -- manages chef cookbooks used
-* Ruby 2.3.1 -- recipes written in ruby
+* Ruby 2.6.3 -- recipes written in ruby
 * bundler -- gem manager
 * chef -- test kitchen uses chef
 * Docker -- everything goes into a docker container
 
 
 Assumes a working docker, chefdk and ruby install on your working platform.
-Change the .ruby-version and .ruby-gemset files if v2.3.1 is not available or you don't want to use a separate gemset.
+To guarantee iptables on the container works. Ensure iptables or ufw is enabled on the host.
+Change the .ruby-version and .ruby-gemset files if v2.6.3 is not available or you don't want to use a separate gemset.
 Use bundler to get dependant gems. A small change had to be done to the provided config.ru file
 
 ## To start
